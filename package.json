@@ -15,6 +15,7 @@
     "prop-types": "^15.8.0",
     "rails-ujs": "^5.2.6",
     "react": "^17.0.2",
+    "react-cookie": "^4.1.1",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.22.5",
     "react-modal": "^3.14.4",

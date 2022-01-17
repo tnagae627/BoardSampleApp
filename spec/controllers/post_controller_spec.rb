@@ -19,7 +19,8 @@ RSpec.describe PostController, type: :controller do
   end
   describe "PostAPI" do
     it "投稿データを登録" do
-      expect { post 'regist', params: { category_id: 1 , ip: '172.17.0.62', name:'', mail: '', text: 'テストです'} }.to change(Post, :count).by(+1)
+      session[:uuid] = 'A0E7CA6D-E568-4FED-8562-318E0620F47F'
+      expect { post 'regist', params: { category_id: 1 , name:'', mail: '', text: 'テストです'} }.to change(Post, :count).by(+1)
       expect(response.status).to eq(200)
     end
     it "投稿データを削除" do

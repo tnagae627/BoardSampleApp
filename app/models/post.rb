@@ -1,11 +1,9 @@
 class Post < ApplicationRecord
     # ============================
-    # validate:ip
+    # validate:uuid
     # ============================
     # 必須項目
-    validates :ip, presence: { message: "投稿処理が失敗しました。ページを更新して再度お試しください。" }
-    # 最大桁数:20
-    validates :ip, length: {maximum: 20, message: "投稿処理が失敗しました。ページを更新して再度お試しください。"}
+    validates :uuid, presence: { message: "投稿処理が失敗しました。ページを更新して再度お試しください。" }
     # ============================
     # validate:name
     # ============================

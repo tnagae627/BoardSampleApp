@@ -4,11 +4,13 @@ import { csrfToken } from 'rails-ujs';
 import axios from 'axios'
 import { PostData } from './postData'
 import '../../../assets/stylesheets/post.scss'
+import { useCookies } from "react-cookie";
 
 /****************************************
  * 投稿一覧の各行データコンポーネント
  ****************************************/
-export const PostItem = (props: {postData: PostData, clientIp: string, updatePosts: any}) => {
+export const PostItem = (props: {postData: PostData, uuid: string, updatePosts: any}) => {
+  const [cookies] = useCookies();
 
   // ================================
   // 投稿削除（非表示）イベント
@@ -23,7 +25,7 @@ export const PostItem = (props: {postData: PostData, clientIp: string, updatePos
     axios.post('http://localhost:3000/post/delete', fd)
     .then(res => {
         // postList更新
-        props.updatePosts(res.data);
+        props.updatePosts(res.data.post);
         // formを初期化
         document.forms['postForm'].reset();
     })
@@ -44,7 +46,7 @@ export const PostItem = (props: {postData: PostData, clientIp: string, updatePos
         </p>
         <div className='d-flex justify-content-between align-items-start'>
           <p className='white-space'>{props.postData.text}</p>
-          { props.postData.ip == props.clientIp && props.postData.hide_flag == '0' &&
+          { props.postData.uuid == props.uuid && props.postData.hide_flag == '0' &&
             <>
               <div className='text-right'>
               <button type='button' onClick={deletePost}

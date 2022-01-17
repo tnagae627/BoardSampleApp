@@ -8,8 +8,8 @@ export class PostData {
   category_id: string;
   /** 非表示フラグ */
   hide_flag: string;
-  /** IPアドレス */
-  ip: string;
+  /** UUIDアドレス */
+  uuid: string;
   /** 名前 */
   name: string;
   /** 名前 */

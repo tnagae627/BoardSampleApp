@@ -3,7 +3,7 @@ class CreatePosts < ActiveRecord::Migration[6.1]
     create_table :posts do |t|
       t.integer :category_id, null: false
       t.string  :hide_flag, limit: 1
-      t.string :ip, null: false, limit: 20
+      t.string :uuid, null: false
       t.string :name, limit: 256
       t.string :mail, limit: 256
       t.string :subject, limit: 256

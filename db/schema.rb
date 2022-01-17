@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 2021_12_27_073507) do
   create_table "posts", force: :cascade do |t|
     t.integer "category_id", null: false
     t.string "hide_flag", limit: 1
-    t.string "ip", limit: 20, null: false
+    t.string "uuid", null: false
     t.string "name", limit: 256
     t.string "mail", limit: 256
     t.string "subject", limit: 256

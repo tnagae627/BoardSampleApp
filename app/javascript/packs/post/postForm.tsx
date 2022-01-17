@@ -2,14 +2,18 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form'
 import { csrfToken } from 'rails-ujs';
 import axios from 'axios'
-import { Fragment} from 'react';
+import { useState, useEffect, Fragment} from 'react';
 import { PostData } from './postData';
 
 /****************************************
  * 新規投稿コンポーネント
  ****************************************/
 export const PostForm = (props) => {
-    const {category_id, updatePosts, clientIp, loginUser} = props;
+    const {category_id, updatePosts, loginUser} = props;
+    /** 名前 */
+    const [name, setName] = useState('');
+    /** メール */
+    const [mail, setEmail] = useState('');
 
     // ================================
     // バリデーション設定
@@ -22,7 +26,7 @@ export const PostForm = (props) => {
         mode: "onChange",
         criteriaMode: "all",
         shouldFocusError: false,
-      });
+    });
 
     // ================================
     // form送信イベント
@@ -32,7 +36,7 @@ export const PostForm = (props) => {
         axios.post('http://localhost:3000/post/regist', new FormData(document.forms['postForm']))
         .then(res => {
             // postList更新
-            updatePosts(res.data);
+            updatePosts(res.data.post);
             // 初期化
             document.getElementById('error_message').innerHTML='';
             document.forms['postForm'].reset();
@@ -43,23 +47,30 @@ export const PostForm = (props) => {
         });
     }
 
+    useEffect(() => {
+        if(loginUser!= undefined) {
+            setName(loginUser.name);
+            setEmail(loginUser.email);
+        }
+    }, [loginUser]);
+
     return(
         <>
             <h2 className='bg-primary text-white p-1'>新規投稿</h2>
             <div id="error_message" className='text-danger my-4'></div>
             <form onSubmit={handleSubmit(onSubmit)} id='postForm' className='mb-5'>
-                <input type='hidden' name='ip' value={clientIp} />
                 <input type='hidden' name='category_id' value={category_id} />
                 <div className='form-group'>
                     <label htmlFor='name'>名前</label>
                     <input type='text' className='form-control' id='name' name='name' placeholder='名無し'
-                         {...register("name", { maxLength: 256 })} value={loginUser!= undefined ? loginUser.name : ''} />
+                         {...register("name", { maxLength: 256 })} value={name}
+                         onChange={event => setName(event.target.value)} />
                     {errors.name?.types?.maxLength && <span className='text-danger'>名前は256文字以内で入力してください</span>}
                 </div>
                 <div className='form-group'>
                     <label htmlFor='mail'>メールアドレス</label>
                     <input type='email' className='form-control' id='mail' name='mail' placeholder='aaa@mail.com'
-                     {...register("mail", { maxLength: 256 })} value={loginUser!= undefined ? loginUser.email : ''} />
+                     {...register("mail", { maxLength: 256 })} value={mail} onChange={event => setEmail(event.target.value)} />
                     {errors.mail?.types?.maxLength && <span className='text-danger'>メールアドレスは256文字以内で入力してください</span>}
                 </div>
                 <div className='form-group'>

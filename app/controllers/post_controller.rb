@@ -4,6 +4,9 @@ class PostController < ApplicationController
 
   def get
     if params['category_id'] != nil then
+      if session[:uuid] == nil then
+        session[:uuid] = SecureRandom.uuid
+      end
       getCategoryPostData(params['category_id'])
     else
       render plain: [].to_json
@@ -18,7 +21,7 @@ class PostController < ApplicationController
     postData = Post.create(
       category_id: params['category_id'],
       hide_flag: '0',
-      ip: params['ip'],
+      uuid: session[:uuid],
       name: params['name'] == '' ? '名無し' : params['name'],
       mail: params['mail'],
       subject: params['subject'],
@@ -61,22 +64,31 @@ class PostController < ApplicationController
   private
     def getCategoryPostData(category_id)
 
-    # ============================
-    # カテゴリの削除チェック
-    # ============================
-    category = Category.find(category_id)
+      # ============================
+      # カテゴリの削除チェック
+      # ============================
+      category = Category.find(category_id)
 
-    if category.deleted_flag == '1' then
-      render json: {
-        errors: "すでに削除されたカテゴリです。",
-        render: 'show.json.jbuilder'
-      }, status: :unprocessable_entity
-      return
-    end
+      if category.deleted_flag == '1' then
+        render json: {
+          errors: "すでに削除されたカテゴリです。",
+          render: 'show.json.jbuilder'
+        }, status: :unprocessable_entity
+        return
+      end
+
+      category = Category.find(category_id)
+      post = nil
+      hash = {"category" => category, "post" => post, "uuid" => session[:uuid]}
       if session[:user_id] then
-        render plain:  Post.where(category_id: category_id).to_json
+        post = Post.where(category_id: category_id)
+        hash["post"] = post
+        render plain:  hash.to_json
+
       else
-        render plain:  Post.where(category_id: category_id, hide_flag: '0').to_json
+        post = Post.where(category_id: category_id, hide_flag: '0')
+        hash["post"] = post
+        render plain:  hash.to_json
       end
     end
 end

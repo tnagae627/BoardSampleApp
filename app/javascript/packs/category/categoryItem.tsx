@@ -75,8 +75,9 @@ export const CategoryItem = (props: {categoryData: CategoryData, updateCategorie
   return(
     <>
       <div className='list-group-item d-flex justify-content-between align-items-start'>
-        <Link to={'/post/index?category_id=' + props.categoryData.id +'&category_name='
-                  + props.categoryData.category_name} >{props.categoryData.category_name}</Link>
+        <Link to={'/post/index?category_id=' + props.categoryData.id}>
+          {props.categoryData.category_name}
+        </Link>
         { props.loggedInStatus &&
         <>
           <PostCount id={props.categoryData.id} key={props.categoryData.id} />
